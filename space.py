@@ -49,9 +49,9 @@ class Ship:
 
 
 class Bullet:
-    def __init__(self, x, y, vx, vy):
+    def __init__(self, color, x, y, vx, vy):
         self.radius = 2
-        self.color = random.choice(["red", "green"])
+        self.color = color
         self.x = x
         self.y = y
         self.vx = vx
@@ -110,9 +110,10 @@ while running:
         if random.randint(0, 100) > 95:
             bullet_velocity_x = random.randint(-10, 10)
             bullet_velocity_y = random.randint(-10, 10)
-            bullet1 = Bullet(ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
-            bullet2 = Bullet(ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
-            bullet3 = Bullet(ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
+            color = random.choice(["red", "green"])
+            bullet1 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
+            bullet2 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
+            bullet3 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
             bullet1.move()
             bullet1.move()
             bullet1.move()
