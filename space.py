@@ -50,8 +50,13 @@ class Ship:
 
 
     def move(self):
-        self.x += random.randint(-10, 10)
-        self.y += random.randint(-10, 10)
+        new_x = self.x + random.randint(-10, 10)
+        new_y = self.y + random.randint(-10, 10)
+
+        if new_x > 0 and new_y > 0 and new_x < screen.get_width() and new_y < screen.get_height():
+            self.x = new_x
+            self.y = new_y
+
         self.draw()
 
 
