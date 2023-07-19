@@ -30,6 +30,13 @@ class Star:
         self.draw()
 
 
+    def tick(self):
+        self.move()
+        if self.x < 0 or self.y < 0 or self.x > screen.get_width() or self.y > screen.get_height():
+            stars.remove(self)
+
+
+
 class Ship:
     def __init__(self):
         self.radius = random.randint(5, 15)
@@ -97,7 +104,7 @@ while running:
     screen.fill("black")
 
     for star in stars:
-        star.move()
+        star.tick()
 
     for ship in ships:
         ship.move()
@@ -123,15 +130,6 @@ while running:
             bullets.append(bullet1)
             bullets.append(bullet2)
             bullets.append(bullet3)
-
-    # removing stars that are out of bounds
-    for star in stars:
-        if star.x > screen.get_width():
-            stars.remove(star)
-            continue
-        if star.y > screen.get_height():
-            stars.remove(star)
-            continue
 
     # add new stars
     if random.randint(0, 100) > 70:
