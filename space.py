@@ -3,13 +3,10 @@ import random
 
 # pygame setup
 pygame.init()
-#  screen = pygame.display.set_mode((1280, 720))
-screen = pygame.display.set_mode((2280, 1720))
+screen = pygame.display.set_mode((3440, 1440))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-
-#  player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 class Star:
     def __init__(self):
@@ -70,6 +67,14 @@ class Bullet:
         self.y += self.vy
         self.draw()
 
+
+    def tick(self):
+        self.move()
+        if self.x < 0 or self.y < 0 or self.x > screen.get_width() or self.y > screen.get_height():
+            bullets.remove(self)
+
+
+
 stars = []
 ships = []
 bullets = []
@@ -98,8 +103,9 @@ while running:
         ship.move()
 
     for bullet in bullets:
-        bullet.move()
+        bullet.tick()
 
+    # shooting
     for ship in ships:
         if random.randint(0, 100) > 95:
             bullet_velocity_x = random.randint(-10, 10)
@@ -117,6 +123,7 @@ while running:
             bullets.append(bullet2)
             bullets.append(bullet3)
 
+    # removing stars that are out of bounds
     for star in stars:
         if star.x > screen.get_width():
             stars.remove(star)
@@ -125,6 +132,7 @@ while running:
             stars.remove(star)
             continue
 
+    # add new stars
     if random.randint(0, 100) > 70:
         stars.append(Star())
 
