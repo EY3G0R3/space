@@ -121,7 +121,13 @@ while running:
     for ship in ships:
         if random.randint(0, 100) > 95:
             bullet_velocity_x = random.randint(-10, 10)
+            while bullet_velocity_x == 0:
+                bullet_velocity_x = random.randint(-10, 10)
+
             bullet_velocity_y = random.randint(-10, 10)
+            while bullet_velocity_y == 0:
+                bullet_velocity_y = random.randint(-10, 10)
+
             color = random.choice(["red", "green"])
             bullet1 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
             bullet2 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
