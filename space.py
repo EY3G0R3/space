@@ -59,6 +59,33 @@ class Ship:
 
         self.draw()
 
+    def tick(self):
+        self.move()
+
+        if random.randint(0, 100) > 95:
+            bullet_velocity_x = random.randint(-10, 10)
+            while bullet_velocity_x == 0:
+                bullet_velocity_x = random.randint(-10, 10)
+
+            bullet_velocity_y = random.randint(-10, 10)
+            while bullet_velocity_y == 0:
+                bullet_velocity_y = random.randint(-10, 10)
+
+            color = random.choice(["red", "green"])
+            bullet1 = Bullet(color, self.x, self.y, bullet_velocity_x, bullet_velocity_y)
+            bullet2 = Bullet(color, self.x, self.y, bullet_velocity_x, bullet_velocity_y)
+            bullet3 = Bullet(color, self.x, self.y, bullet_velocity_x, bullet_velocity_y)
+            bullet1.move()
+            bullet1.move()
+            bullet1.move()
+            bullet1.move()
+            bullet2.move()
+            bullet2.move()
+            bullets.append(bullet1)
+            bullets.append(bullet2)
+            bullets.append(bullet3)
+
+
 
 class Bullet:
     def __init__(self, color, x, y, vx, vy):
@@ -112,35 +139,10 @@ while running:
         star.tick()
 
     for ship in ships:
-        ship.move()
+        ship.tick()
 
     for bullet in bullets:
         bullet.tick()
-
-    # shooting
-    for ship in ships:
-        if random.randint(0, 100) > 95:
-            bullet_velocity_x = random.randint(-10, 10)
-            while bullet_velocity_x == 0:
-                bullet_velocity_x = random.randint(-10, 10)
-
-            bullet_velocity_y = random.randint(-10, 10)
-            while bullet_velocity_y == 0:
-                bullet_velocity_y = random.randint(-10, 10)
-
-            color = random.choice(["red", "green"])
-            bullet1 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
-            bullet2 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
-            bullet3 = Bullet(color, ship.x, ship.y, bullet_velocity_x, bullet_velocity_y)
-            bullet1.move()
-            bullet1.move()
-            bullet1.move()
-            bullet1.move()
-            bullet2.move()
-            bullet2.move()
-            bullets.append(bullet1)
-            bullets.append(bullet2)
-            bullets.append(bullet3)
 
     # add new stars
     if random.randint(0, 100) > 70:
