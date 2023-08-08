@@ -114,9 +114,27 @@ class Bullet:
 
 
 
+class DeathFX:
+    def __init__(self, x, y):
+        self.radius = 5
+        self.color = "yellow"
+        self.x = x
+        self.y = y
+
+
+    def draw(self):
+        pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
+
+
+    def tick(self):
+        self.radius += 0.1
+        self.draw()
+
+
 stars = []
 ships = []
 bullets = []
+deaths = []
 
 for i in range(0, 1):
     stars.append(Star())
@@ -143,6 +161,9 @@ while running:
 
     for bullet in bullets:
         bullet.tick()
+
+    for death in deaths:
+        death.tick()
 
     # add new stars
     if random.randint(0, 100) > 70:
