@@ -60,6 +60,14 @@ class Ship:
 
         self.draw()
 
+    def destroy(self):
+        deaths.append(DeathFX(self.x, self.y))
+        ships.remove(self)
+
+
+
+
+
     def tick(self):
         self.move()
 
@@ -85,6 +93,7 @@ class Ship:
             bullets.append(bullet1)
             bullets.append(bullet2)
             bullets.append(bullet3)
+
 
 def distance(x1, y1, x2, y2):
     return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
@@ -118,12 +127,20 @@ class Bullet:
         self.y += self.vy
         self.draw()
 
+        ship = find_collision(self.x, self.y)
+        if ship:
+            ship.destroy()
+            self.destroy()
+            return
+
+    def destroy(self):
+        bullets.remove(self)
 
 
     def tick(self):
         self.move()
         if self.x < 0 or self.y < 0 or self.x > screen.get_width() or self.y > screen.get_height():
-            bullets.remove(self)
+            self.destroy()
 
 
 
