@@ -2,6 +2,12 @@ import math
 import pygame
 import random
 
+# TODO:
+# ~~~~~
+# * spawn new ships on deaths (or on timers)
+# * control our ship
+
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((3440, 1440))
