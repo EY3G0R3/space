@@ -154,7 +154,7 @@ class Bullet:
 class DeathFX:
     def __init__(self, x, y):
         self.radius = 5
-        self.color = "yellow"
+        self.color = random.choice(["yellow", "orange", "red"])
         self.x = x
         self.y = y
 
@@ -167,7 +167,7 @@ class DeathFX:
         self.radius += 5
         self.draw()
 
-        if self.radius > 200:
+        if self.radius > random.randint(100, 200):
             self.destroy()
 
     def destroy(self):
