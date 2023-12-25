@@ -4,7 +4,6 @@ import random
 
 # TODO:
 # ~~~~~
-# * spawn new ships on deaths (or on timers)
 # * control our ship
 
 
@@ -69,6 +68,7 @@ class Ship:
     def destroy(self):
         deaths.append(DeathFX(self.x, self.y))
         ships.remove(self)
+        ships.append(Ship())
 
 
 
