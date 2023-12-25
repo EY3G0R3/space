@@ -1,3 +1,4 @@
+import math
 import pygame
 import random
 
@@ -85,6 +86,17 @@ class Ship:
             bullets.append(bullet2)
             bullets.append(bullet3)
 
+def distance(x1, y1, x2, y2):
+    return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+
+def find_collision(x, y):
+
+    for ship in ships:
+        if distance(x, y, ship.x, ship.y) < 5:
+            return ship
+
+    return None
+
 
 
 class Bullet:
@@ -105,6 +117,7 @@ class Bullet:
         self.x += self.vx
         self.y += self.vy
         self.draw()
+
 
 
     def tick(self):
