@@ -134,7 +134,8 @@ class Bullet:
             return
 
     def destroy(self):
-        bullets.remove(self)
+        if self in bullets:
+            bullets.remove(self)
 
 
     def tick(self):
@@ -157,8 +158,14 @@ class DeathFX:
 
 
     def tick(self):
-        self.radius += 0.1
+        self.radius += 5
         self.draw()
+
+        if self.radius > 200:
+            self.destroy()
+
+    def destroy(self):
+        deaths.remove(self)
 
 
 stars = []
