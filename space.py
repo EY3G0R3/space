@@ -107,7 +107,7 @@ def distance(x1, y1, x2, y2):
 def find_collision(x, y):
 
     for ship in ships:
-        if distance(x, y, ship.x, ship.y) < 5:
+        if distance(x, y, ship.x, ship.y) < 3:
             return ship
 
     return None
