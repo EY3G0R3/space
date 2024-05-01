@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+
+import os
+import sys
 import math
 import pygame
 import random
@@ -5,9 +9,21 @@ import random
 # TODO:
 # ~~~~~
 # * control our ship
+# * better death animation - flying debris
 
+# command-line handling (root window)
+if len(sys.argv) > 1:
+    # xscreensaver_window = os.environ.get('XSCREENSAVER_WINDOW')
+    os.environ['SDL_WINDOWID'] = sys.argv[1]
 
 # pygame setup
+
+# from documentation:
+# On some platforms it is possible to embed the pygame display into an already existing window.
+# To do this, the environment variable SDL_WINDOWID must be set to a string containing
+# the window id or handle. The environment variable is checked when the pygame display is initialized.
+# Be aware that there can be many strange side effects when running in an embedded display.
+
 pygame.init()
 screen = pygame.display.set_mode((3440, 1440))
 clock = pygame.time.Clock()
