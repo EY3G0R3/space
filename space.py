@@ -120,10 +120,14 @@ class Ship:
 def distance(x1, y1, x2, y2):
     return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
+# faster than distance()
+def distance_squared(x1, y1, x2, y2):
+    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
+
 def find_collision(x, y):
 
     for ship in ships:
-        if distance(x, y, ship.x, ship.y) < 3:
+        if distance_squared(x, y, ship.x, ship.y) < 3*3:
             return ship
 
     return None
