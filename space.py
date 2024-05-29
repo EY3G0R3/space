@@ -212,6 +212,10 @@ while running:
     for event in pygame.event.get():
          if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
              running = False
+         elif event.type == pygame.KEYDOWN:
+             # destroy a random ship to give visual feedback
+             ships[random.randrange(-1, len(ships))].destroy()
+
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
