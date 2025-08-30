@@ -11,23 +11,6 @@ import random
 # * control our ship
 # * better death animation - flying debris
 
-# command-line handling (root window)
-if len(sys.argv) > 1:
-    # from documentation:
-    # On some platforms it is possible to embed the pygame display into an already existing window.
-    # To do this, the environment variable SDL_WINDOWID must be set to a string containing
-    # the window id or handle. The environment variable is checked when the pygame display is initialized.
-    # Be aware that there can be many strange side effects when running in an embedded display.
-    os.environ['SDL_WINDOWID'] = sys.argv[1]
-
-
-# pygame setup
-pygame.init()
-screen = pygame.display.set_mode((3440, 1440))
-clock = pygame.time.Clock()
-running = True
-dt = 0
-
 
 class Star:
     def __init__(self):
@@ -110,7 +93,7 @@ def distance(x1, y1, x2, y2):
     return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
 
-def distance_squared(x1, y1, x2, y2): # faster than distance()
+def distance_squared(x1, y1, x2, y2):  # faster than distance()
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
 
 
@@ -175,18 +158,37 @@ class DeathFX:
         deaths.remove(self)
 
 
+# handle command line
+if len(sys.argv) > 1:
+    # from documentation:
+    # On some platforms it is possible to embed the pygame display into an already existing window.
+    # To do this, the environment variable SDL_WINDOWID must be set to a string containing
+    # the window id or handle. The environment variable is checked when the pygame display is initialized.
+    # Be aware that there can be many strange side effects when running in an embedded display.
+    os.environ['SDL_WINDOWID'] = sys.argv[1]
+
+# Init pygame
+pygame.init()
+screen = pygame.display.set_mode((3440, 1440))
+clock = pygame.time.Clock()
+running = True
+dt = 0
+
+
+# Global unit lists
 stars = []
 ships = []
 bullets = []
 deaths = []
 
+# Create the universe
 for i in range(0, 1):
     stars.append(Star())
 
 for i in range(0, 3):
     ships.append(Ship())
 
-
+# Main loop
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
