@@ -109,10 +109,8 @@ class Ship:
 def distance(x1, y1, x2, y2):
     return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
-# faster than distance()
 
-
-def distance_squared(x1, y1, x2, y2):
+def distance_squared(x1, y1, x2, y2): # faster than distance()
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
 
 
