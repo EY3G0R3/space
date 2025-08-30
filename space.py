@@ -21,13 +21,13 @@ if len(sys.argv) > 1:
     os.environ['SDL_WINDOWID'] = sys.argv[1]
 
 
-
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((3440, 1440))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+
 
 class Star:
     def __init__(self):
@@ -40,22 +40,18 @@ class Star:
             self.x = 0
             self.y = random.randint(0, screen.get_height())
 
-
     def draw(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
-
 
     def move(self):
         self.x += 4
         self.y += 2
         self.draw()
 
-
     def tick(self):
         self.move()
         if self.x < 0 or self.y < 0 or self.x > screen.get_width() or self.y > screen.get_height():
             stars.remove(self)
-
 
 
 class Ship:
@@ -65,10 +61,8 @@ class Ship:
         self.x = random.randint(0, screen.get_width())
         self.y = random.randint(0, screen.get_height())
 
-
     def draw(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
-
 
     def move(self):
         new_x = self.x + random.randint(-10, 10)
@@ -84,10 +78,6 @@ class Ship:
         deaths.append(DeathFX(self.x, self.y))
         ships.remove(self)
         ships.append(Ship())
-
-
-
-
 
     def tick(self):
         self.move()
@@ -120,15 +110,17 @@ def distance(x1, y1, x2, y2):
     return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
 
 # faster than distance()
+
+
 def distance_squared(x1, y1, x2, y2):
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
 
+
 def find_collision(x, y):
     for ship in ships:
-        if distance_squared(x, y, ship.x, ship.y) < 1*1:
+        if distance_squared(x, y, ship.x, ship.y) < 1 * 1:
             return ship
     return None
-
 
 
 class Bullet:
@@ -140,10 +132,8 @@ class Bullet:
         self.vx = vx
         self.vy = vy
 
-
     def draw(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
-
 
     def move(self):
         self.x += self.vx
@@ -160,12 +150,10 @@ class Bullet:
         if self in bullets:
             bullets.remove(self)
 
-
     def tick(self):
         self.move()
         if self.x < 0 or self.y < 0 or self.x > screen.get_width() or self.y > screen.get_height():
             self.destroy()
-
 
 
 class DeathFX:
@@ -175,10 +163,8 @@ class DeathFX:
         self.x = x
         self.y = y
 
-
     def draw(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
-
 
     def tick(self):
         self.radius += 5
@@ -207,12 +193,11 @@ while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
-         if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-             running = False
-         elif event.type == pygame.KEYDOWN:
-             # destroy a random ship to give visual feedback
-             ships[random.randrange(-1, len(ships))].destroy()
-
+        if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            # destroy a random ship to give visual feedback
+            ships[random.randrange(-1, len(ships))].destroy()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
