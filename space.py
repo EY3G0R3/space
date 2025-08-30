@@ -191,15 +191,17 @@ for i in range(0, 3):
 # Main loop
 while running:
     # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN and (event.key == pygame.K_ESCAPE or event.key == pygame.K_q):
+        if event.type == pygame.QUIT:  # pygame.QUIT event means the user clicked X to close your window
             running = False
         elif event.type == pygame.KEYDOWN:
-            # destroy a random ship to give visual feedback
-            ships[random.randrange(-1, len(ships))].destroy()
+            if event.key == pygame.K_ESCAPE:
+                running = False
+            elif event.key == pygame.K_q:
+                running = False
+            else:
+                # destroy a random ship to give visual feedback
+                ships[random.randrange(-1, len(ships))].destroy()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
