@@ -48,8 +48,11 @@ class Ship:
         self.color = random.choice(["yellow", "blue", "orange", "pink", "cyan"])
         self.x = random.randint(0, screen.get_width())
         self.y = random.randint(0, screen.get_height())
-        self.vx = random.randint(-10, 10)
-        self.vy = random.randint(-10, 10)
+        self.change_direction()
+
+    def change_direction(self):
+        self.vx = random.randint(-5, 5)
+        self.vy = random.randint(-5, 5)
 
     def draw(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
@@ -78,6 +81,9 @@ class Ship:
         if self == player:  # do nothing, controlled by the player
             self.draw()
             return
+
+        if random.randint(0, 100) > 95:
+            self.change_direction()
 
         self.move()
 
