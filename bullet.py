@@ -9,8 +9,6 @@ class Bullet:
         self.parent = parent
         self.radius = 1
         self.color = color
-        if self.color == "blue":
-            self.radius = 3
         self.x = x
         self.y = y
         self.vx = vx
@@ -38,9 +36,6 @@ class Bullet:
             state.bullets.remove(self)
 
     def tick(self):
-        if self.color == "blue":
-            self.vy += 0.05
-
         self.move()
 
         if is_outside_screen_area(self.x, self.y):

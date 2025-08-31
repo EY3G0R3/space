@@ -9,7 +9,7 @@ from effects import DeathFX
 
 class Ship:
     def __init__(self):
-        self.radius = random.randint(5, 15)
+        self.radius = random.randint(20, 20)
         self.color = random.choice(["yellow", "blue", "orange", "pink", "cyan"])
         self.x = random.randint(0, state.screen.get_width())
         self.y = random.randint(0, state.screen.get_height())
@@ -52,11 +52,11 @@ class Ship:
 
         distance = utils.distance(self.x, self.y, target.x, target.y)
 
-        if distance < 300:
+        if distance < 500:
             self.shoot_laser(target)
-        elif distance < 800:
+        elif distance < 1000:
             self.shoot_machinegun(target)
-        elif distance < 1600:
+        elif distance < 2000:
             self.shoot_gliding_bombs(target)
         else:
             self.shoot_torpedo(target)
@@ -80,7 +80,7 @@ class Ship:
 
     def shoot_gliding_bombs(self, target):
         distance_x = target.x - self.x
-        distance_y = target.y - self.y + 1000  # shoot higher
+        distance_y = target.y - self.y - 500  # aim above
 
         vx = distance_x / 100
         vy = distance_y / 100
@@ -96,7 +96,7 @@ class Ship:
                 vx,
                 vy,
                 0,
-                0.01,
+                0.1,
             )
             bullet.radius = 5
             bullet.move()
