@@ -84,7 +84,7 @@ class Ship:
 
         self.move()
 
-        if percentage_chance(5):
+        if percentage_chance(2):
             target = self.choose_random_target()
             if not target:
                 return
