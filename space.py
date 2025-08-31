@@ -252,7 +252,7 @@ def add_player():
 for i in range(0, 1):
     stars.append(Star())
 
-for i in range(0, 3):
+for i in range(0, 5):
     ships.append(Ship())
 
 # Main loop
