@@ -33,7 +33,12 @@ class Star:
 
     def tick(self):
         self.move()
-        if self.x < 0 or self.y < 0 or self.x > screen.get_width() or self.y > screen.get_height():
+        if (
+            self.x < 0
+            or self.y < 0
+            or self.x > screen.get_width()
+            or self.y > screen.get_height()
+        ):
             stars.remove(self)
 
 
@@ -43,15 +48,22 @@ class Ship:
         self.color = random.choice(["yellow", "blue", "orange", "pink", "cyan"])
         self.x = random.randint(0, screen.get_width())
         self.y = random.randint(0, screen.get_height())
+        self.vx = random.randint(-10, 10)
+        self.vy = random.randint(-10, 10)
 
     def draw(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.radius)
 
     def move(self):
-        new_x = self.x + random.randint(-10, 10)
-        new_y = self.y + random.randint(-10, 10)
+        new_x = self.x + self.vx
+        new_y = self.y + self.vy
 
-        if new_x > 0 and new_y > 0 and new_x < screen.get_width() and new_y < screen.get_height():
+        if (
+            new_x > 0
+            and new_y > 0
+            and new_x < screen.get_width()
+            and new_y < screen.get_height()
+        ):
             self.x = new_x
             self.y = new_y
 
@@ -79,9 +91,15 @@ class Ship:
                 bullet_velocity_y = random.randint(-10, 10)
 
             color = random.choice(["red", "green"])
-            bullet1 = Bullet(color, self.x, self.y, bullet_velocity_x, bullet_velocity_y)
-            bullet2 = Bullet(color, self.x, self.y, bullet_velocity_x, bullet_velocity_y)
-            bullet3 = Bullet(color, self.x, self.y, bullet_velocity_x, bullet_velocity_y)
+            bullet1 = Bullet(
+                color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+            )
+            bullet2 = Bullet(
+                color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+            )
+            bullet3 = Bullet(
+                color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+            )
             bullet1.move()
             bullet1.move()
             bullet1.move()
@@ -137,7 +155,12 @@ class Bullet:
 
     def tick(self):
         self.move()
-        if self.x < 0 or self.y < 0 or self.x > screen.get_width() or self.y > screen.get_height():
+        if (
+            self.x < 0
+            or self.y < 0
+            or self.x > screen.get_width()
+            or self.y > screen.get_height()
+        ):
             self.destroy()
 
 
@@ -169,7 +192,7 @@ if len(sys.argv) > 1:
     # To do this, the environment variable SDL_WINDOWID must be set to a string containing
     # the window id or handle. The environment variable is checked when the pygame display is initialized.
     # Be aware that there can be many strange side effects when running in an embedded display.
-    os.environ['SDL_WINDOWID'] = sys.argv[1]
+    os.environ["SDL_WINDOWID"] = sys.argv[1]
 
 # Init pygame
 pygame.init()
@@ -204,7 +227,9 @@ for i in range(0, 3):
 while running:
     # poll for events
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:  # pygame.QUIT event means the user clicked X to close your window
+        if (
+            event.type == pygame.QUIT
+        ):  # pygame.QUIT event means the user clicked X to close your window
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
