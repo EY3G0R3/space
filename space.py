@@ -16,7 +16,7 @@ class Star:
     def __init__(self):
         self.radius = random.randint(2, 3)
         self.color = random.choice(["white", "lightgray", "darkgray"])
-        if random.randint(0, 1) == 1:
+        if percentage_chance(50):
             self.x = random.randint(0, screen.get_width())
             self.y = 0
         else:
@@ -89,12 +89,12 @@ class Ship:
             self.draw()
             return
 
-        if random.randint(0, 100) > 95:
+        if percentage_chance(5):
             self.change_direction()
 
         self.move()
 
-        if random.randint(0, 100) > 95:
+        if percentage_chance(5):
             target = self.choose_random_target()
             if not target:
                 return
@@ -220,6 +220,10 @@ def find_collision(x, y, parent):
         ):
             return ship
     return None
+
+
+def percentage_chance(percentage):
+    return random.randint(0, 100) < percentage
 
 
 # handle command line
