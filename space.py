@@ -107,13 +107,13 @@ class Ship:
 
             color = random.choice(["red", "green", "blue"])
             bullet1 = Bullet(
-                color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+                self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
             )
             bullet2 = Bullet(
-                color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+                self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
             )
             bullet3 = Bullet(
-                color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+                self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
             )
             bullet1.move()
             bullet1.move()
@@ -134,15 +134,19 @@ def distance_squared(x1, y1, x2, y2):  # faster than distance()
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
 
 
-def find_collision(x, y):
+def find_collision(x, y, parent):
     for ship in ships:
-        if distance_squared(x, y, ship.x, ship.y) < ship.radius * ship.radius:
+        if (
+            ship is not parent
+            and distance_squared(x, y, ship.x, ship.y) < ship.radius * ship.radius
+        ):
             return ship
     return None
 
 
 class Bullet:
-    def __init__(self, color, x, y, vx, vy):
+    def __init__(self, parent, color, x, y, vx, vy):
+        self.parent = parent
         self.radius = 2
         self.color = color
         if self.color == "blue":
@@ -160,7 +164,9 @@ class Bullet:
         self.y += self.vy
         self.draw()
 
-        ship = find_collision(self.x, self.y)
+        # so the problem here is that we can 'collide' with the parent ship
+        # when we beginning our movement
+        ship = find_collision(self.x, self.y, self.parent)
         if ship:
             ship.destroy()
             self.destroy()
