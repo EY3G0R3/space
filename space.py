@@ -213,14 +213,21 @@ stars = []
 ships = []
 bullets = []
 deaths = []
+player = None
 
-player = Ship()
-player.color = "blue"
-player.radius = 5
-player.x = screen.get_width() / 2
-player.y = screen.get_height() / 2
 
-ships.append(player)
+def add_player():
+    global player
+    global ships
+
+    player = Ship()
+    player.color = "blue"
+    player.radius = 5
+    player.x = screen.get_width() / 2
+    player.y = screen.get_height() / 2
+
+    ships.append(player)
+
 
 # Create the universe
 for i in range(0, 1):
