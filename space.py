@@ -77,6 +77,13 @@ class Ship:
         ships.remove(self)
         ships.append(Ship())
 
+    def choose_random_target(self):
+        for attempt in range(0, 5):
+            index = random.randrange(0, len(ships))
+            if ships[index] != self:
+                return ships[index]
+        return None  # couldn't find a suitable target
+
     def tick(self):
         if self == player:  # do nothing, controlled by the player
             self.draw()
@@ -88,13 +95,15 @@ class Ship:
         self.move()
 
         if random.randint(0, 100) > 95:
-            bullet_velocity_x = random.randint(-10, 10)
-            while bullet_velocity_x == 0:
-                bullet_velocity_x = random.randint(-10, 10)
+            target = self.choose_random_target()
+            if not target:
+                return
 
-            bullet_velocity_y = random.randint(-10, 10)
-            while bullet_velocity_y == 0:
-                bullet_velocity_y = random.randint(-10, 10)
+            distance_x = target.x - self.x
+            distance_y = target.y - self.y
+
+            bullet_velocity_x = distance_x / 100
+            bullet_velocity_y = distance_y / 100
 
             color = random.choice(["red", "green"])
             bullet1 = Bullet(
