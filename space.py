@@ -33,12 +33,7 @@ class Star:
 
     def tick(self):
         self.move()
-        if (
-            self.x < 0
-            or self.y < 0
-            or self.x > screen.get_width()
-            or self.y > screen.get_height()
-        ):
+        if is_outside_screen_area(self.x, self.y):
             stars.remove(self)
 
 
@@ -61,12 +56,7 @@ class Ship:
         new_x = self.x + self.vx
         new_y = self.y + self.vy
 
-        if (
-            new_x > 0
-            and new_y > 0
-            and new_x < screen.get_width()
-            and new_y < screen.get_height()
-        ):
+        if is_inside_screen_area(new_x, new_y):
             self.x = new_x
             self.y = new_y
 
@@ -173,12 +163,7 @@ class Bullet:
 
         self.move()
 
-        if (
-            self.x < 0
-            or self.y < 0
-            or self.x > screen.get_width()
-            or self.y > screen.get_height()
-        ):
+        if is_outside_screen_area(self.x, self.y):
             self.destroy()
 
 
@@ -224,6 +209,14 @@ def find_collision(x, y, parent):
 
 def percentage_chance(percentage):
     return random.randint(0, 100) < percentage
+
+
+def is_inside_screen_area(x, y):
+    return x >= 0 and y >= 0 and x < screen.get_width() and y < screen.get_height()
+
+
+def is_outside_screen_area(x, y):
+    return not is_inside_screen_area(x, y)
 
 
 # handle command line
