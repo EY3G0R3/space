@@ -187,7 +187,7 @@ class Bullet:
         #     self.vy = -self.vy
 
         if self.color == "blue":
-            self.vy += 0.01
+            self.vy += 0.05
 
         self.move()
 
