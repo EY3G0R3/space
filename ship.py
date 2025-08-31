@@ -45,6 +45,37 @@ class Ship:
                 return state.ships[index]
         return None  # couldn't find a suitable target
 
+    def shoot_at_target(self, target):
+        if not target:
+            print("target need to be set")
+            return
+
+        distance_x = target.x - self.x
+        distance_y = target.y - self.y
+
+        bullet_velocity_x = distance_x / 500
+        bullet_velocity_y = distance_y / 500
+
+        color = self.color
+        bullet1 = Bullet(
+            self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+        )
+        bullet2 = Bullet(
+            self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+        )
+        bullet3 = Bullet(
+            self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
+        )
+        bullet1.move()
+        bullet1.move()
+        bullet1.move()
+        bullet1.move()
+        bullet2.move()
+        bullet2.move()
+        state.bullets.append(bullet1)
+        state.bullets.append(bullet2)
+        state.bullets.append(bullet3)
+
     def tick(self):
         if self == state.player:  # do nothing, controlled by the player (future)
             self.draw()
@@ -57,31 +88,5 @@ class Ship:
 
         if percentage_chance(2):
             target = self.choose_random_target()
-            if not target:
-                return
-
-            distance_x = target.x - self.x
-            distance_y = target.y - self.y
-
-            bullet_velocity_x = distance_x / 500
-            bullet_velocity_y = distance_y / 500
-
-            color = self.color
-            bullet1 = Bullet(
-                self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
-            )
-            bullet2 = Bullet(
-                self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
-            )
-            bullet3 = Bullet(
-                self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
-            )
-            bullet1.move()
-            bullet1.move()
-            bullet1.move()
-            bullet1.move()
-            bullet2.move()
-            bullet2.move()
-            state.bullets.append(bullet1)
-            state.bullets.append(bullet2)
-            state.bullets.append(bullet3)
+            if target:
+                self.shoot_at_target(target)
