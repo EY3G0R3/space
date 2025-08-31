@@ -147,7 +147,7 @@ def find_collision(x, y, parent):
 class Bullet:
     def __init__(self, parent, color, x, y, vx, vy):
         self.parent = parent
-        self.radius = 2
+        self.radius = 1
         self.color = color
         if self.color == "blue":
             self.radius = 3
