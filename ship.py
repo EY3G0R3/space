@@ -2,7 +2,7 @@ import random
 import pygame
 
 import state
-from utils import is_inside_screen_area, percentage_chance
+import utils
 from bullet import Bullet
 from effects import DeathFX
 
@@ -26,7 +26,7 @@ class Ship:
         new_x = self.x + self.vx
         new_y = self.y + self.vy
 
-        if is_inside_screen_area(new_x, new_y):
+        if utils.is_inside_screen_area(new_x, new_y):
             self.x = new_x
             self.y = new_y
 
@@ -50,43 +50,96 @@ class Ship:
             print("target need to be set")
             return
 
+        distance = utils.distance(self.x, self.y, target.x, target.y)
+
+        if distance < 300:
+            self.shoot_laser(target)
+        elif distance < 800:
+            self.shoot_machinegun(target)
+        elif distance < 1600:
+            self.shoot_gliding_bombs(target)
+        else:
+            self.shoot_torpedo(target)
+
+    def shoot_laser(self, target):
+        pygame.draw.line(state.screen, "red", (self.x, self.y), (target.x, target.y), 2)
+
+    def shoot_machinegun(self, target):
         distance_x = target.x - self.x
         distance_y = target.y - self.y
 
-        bullet_velocity_x = distance_x / 500
-        bullet_velocity_y = distance_y / 500
+        vx = distance_x / 500
+        vy = distance_y / 500
 
         color = self.color
-        bullet1 = Bullet(
-            self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
-        )
-        bullet2 = Bullet(
-            self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
-        )
-        bullet3 = Bullet(
-            self, color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
-        )
-        bullet1.move()
-        bullet1.move()
-        bullet1.move()
-        bullet1.move()
-        bullet2.move()
-        bullet2.move()
-        state.bullets.append(bullet1)
-        state.bullets.append(bullet2)
-        state.bullets.append(bullet3)
+
+        for i in range(0, 5):
+            bullet = Bullet(self, color, self.x, self.y, vx, vy)
+            bullet.move()
+            state.bullets.append(bullet)
+
+    def shoot_gliding_bombs(self, target):
+        distance_x = target.x - self.x
+        distance_y = target.y - self.y + 1000  # shoot higher
+
+        vx = distance_x / 100
+        vy = distance_y / 100
+
+        color = self.color
+
+        for i in range(0, 3):
+            bullet = Bullet(
+                self,
+                color,
+                self.x,
+                self.y,
+                vx,
+                vy,
+                0,
+                0.01,
+            )
+            bullet.radius = 5
+            bullet.move()
+            state.bullets.append(bullet)
+
+    def shoot_torpedo(self, target):
+        distance_x = target.x - self.x
+        distance_y = target.y - self.y
+
+        vx = distance_x / 1000
+        vy = distance_y / 1000
+
+        ax = vx / 5
+        ay = vy / 5
+
+        color = self.color
+
+        for i in range(0, 1):
+            bullet = Bullet(
+                self,
+                color,
+                self.x,
+                self.y,
+                vx,
+                vy,
+                ax,
+                ay,
+            )
+            bullet.radius = 3
+            bullet.move()
+            state.bullets.append(bullet)
 
     def tick(self):
         if self == state.player:  # do nothing, controlled by the player (future)
             self.draw()
             return
 
-        if percentage_chance(5):
+        if utils.percentage_chance(5):
             self.change_direction()
 
         self.move()
 
-        if percentage_chance(2):
+        if utils.percentage_chance(2):
             target = self.choose_random_target()
             if target:
                 self.shoot_at_target(target)
