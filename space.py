@@ -102,10 +102,10 @@ class Ship:
             distance_x = target.x - self.x
             distance_y = target.y - self.y
 
-            bullet_velocity_x = distance_x / 100
-            bullet_velocity_y = distance_y / 100
+            bullet_velocity_x = distance_x / 500
+            bullet_velocity_y = distance_y / 500
 
-            color = random.choice(["red", "green"])
+            color = random.choice(["red", "green", "blue"])
             bullet1 = Bullet(
                 color, self.x, self.y, bullet_velocity_x, bullet_velocity_y
             )
@@ -145,6 +145,8 @@ class Bullet:
     def __init__(self, color, x, y, vx, vy):
         self.radius = 2
         self.color = color
+        if self.color == "blue":
+            self.radius = 3
         self.x = x
         self.y = y
         self.vx = vx
@@ -177,6 +179,9 @@ class Bullet:
         #     self.vx = -self.vx
         # if new_y < 0 or new_y > screen.get_height():
         #     self.vy = -self.vy
+
+        if self.color == "blue":
+            self.vy += 0.01
 
         self.move()
 
@@ -252,7 +257,7 @@ def add_player():
 for i in range(0, 1):
     stars.append(Star())
 
-for i in range(0, 5):
+for i in range(0, 3):
     ships.append(Ship())
 
 # Main loop
