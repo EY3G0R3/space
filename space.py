@@ -264,9 +264,7 @@ for i in range(0, 3):
 while running:
     # poll for events
     for event in pygame.event.get():
-        if (
-            event.type == pygame.QUIT
-        ):  # pygame.QUIT event means the user clicked X to close your window
+        if event.type == pygame.QUIT:  # the user clicked X to close the window
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
