@@ -136,7 +136,7 @@ def distance_squared(x1, y1, x2, y2):  # faster than distance()
 
 def find_collision(x, y):
     for ship in ships:
-        if distance_squared(x, y, ship.x, ship.y) < 1 * 1:
+        if distance_squared(x, y, ship.x, ship.y) < ship.radius * ship.radius:
             return ship
     return None
 
