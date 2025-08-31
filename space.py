@@ -63,6 +63,10 @@ class Ship:
         ships.append(Ship())
 
     def tick(self):
+        if self == player:  # do nothing, controlled by the player
+            self.draw()
+            return
+
         self.move()
 
         if random.randint(0, 100) > 95:
@@ -180,6 +184,14 @@ stars = []
 ships = []
 bullets = []
 deaths = []
+
+player = Ship()
+player.color = "blue"
+player.radius = 5
+player.x = screen.get_width() / 2
+player.y = screen.get_height() / 2
+
+ships.append(player)
 
 # Create the universe
 for i in range(0, 1):
