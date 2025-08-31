@@ -126,24 +126,6 @@ class Ship:
             bullets.append(bullet3)
 
 
-def distance(x1, y1, x2, y2):
-    return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
-
-
-def distance_squared(x1, y1, x2, y2):  # faster than distance()
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
-
-
-def find_collision(x, y, parent):
-    for ship in ships:
-        if (
-            ship is not parent
-            and distance_squared(x, y, ship.x, ship.y) < ship.radius * ship.radius
-        ):
-            return ship
-    return None
-
-
 class Bullet:
     def __init__(self, parent, color, x, y, vx, vy):
         self.parent = parent
@@ -219,6 +201,25 @@ class DeathFX:
 
     def destroy(self):
         deaths.remove(self)
+
+
+# Helper functions
+def distance(x1, y1, x2, y2):
+    return math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+
+
+def distance_squared(x1, y1, x2, y2):  # faster than distance()
+    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
+
+
+def find_collision(x, y, parent):
+    for ship in ships:
+        if (
+            ship is not parent
+            and distance_squared(x, y, ship.x, ship.y) < ship.radius * ship.radius
+        ):
+            return ship
+    return None
 
 
 # handle command line
