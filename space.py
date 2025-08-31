@@ -169,7 +169,17 @@ class Bullet:
             bullets.remove(self)
 
     def tick(self):
+        new_x = self.x + self.vx
+        new_y = self.y + self.vy
+
+        if new_x < 0 or new_x > screen.get_width():
+            self.vx = -self.vx
+
+        if new_y < 0 or new_y > screen.get_height():
+            self.vy = -self.vy
+
         self.move()
+
         if (
             self.x < 0
             or self.y < 0
