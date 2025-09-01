@@ -1,4 +1,5 @@
 import random
+import math
 import pygame
 
 import state
@@ -13,6 +14,8 @@ class Ship:
         self.color = random.choice(["yellow", "blue", "orange", "pink", "cyan"])
         self.x = random.randint(0, state.screen.get_width())
         self.y = random.randint(0, state.screen.get_height())
+        # Cache last facing angle so stationary ships keep orientation
+        self._angle = random.uniform(0, math.tau)
         self.change_direction()
 
     def change_direction(self):
@@ -20,7 +23,42 @@ class Ship:
         self.vy = random.randint(-5, 5)
 
     def draw(self):
-        pygame.draw.circle(state.screen, self.color, (self.x, self.y), self.radius)
+        # Determine facing based on velocity; keep previous if stationary
+        if self.vx != 0 or self.vy != 0:
+            self._angle = math.atan2(self.vy, self.vx)
+
+        size = self.radius
+
+        # Define a simple ship hull in model space (pointing +X)
+        # Nose, top tail, bottom tail, plus small fins for flair
+        hull = [
+            (size, 0),  # nose
+            (-0.6 * size, -0.5 * size),
+            (-0.2 * size, 0),
+            (-0.6 * size, 0.5 * size),
+        ]
+
+        # Rotation matrix
+        c = math.cos(self._angle)
+        s = math.sin(self._angle)
+
+        def transform(pt):
+            px, py = pt
+            rx = px * c - py * s
+            ry = px * s + py * c
+            return (int(self.x + rx), int(self.y + ry))
+
+        hull_pts = [transform(p) for p in hull]
+
+        # Draw filled hull and a crisp outline
+        pygame.draw.polygon(state.screen, self.color, hull_pts)
+        pygame.draw.polygon(state.screen, "white", hull_pts, 2)
+
+        # Engine glow at tail center
+        tail_local = (-0.65 * size, 0)
+        tail_world = transform(tail_local)
+        flame_color = random.choice(["orange", "yellow", "red"]) if (self.vx or self.vy) else "gray"
+        pygame.draw.circle(state.screen, flame_color, tail_world, max(2, int(size * 0.2)))
 
     def move(self):
         new_x = self.x + self.vx
