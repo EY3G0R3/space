@@ -60,7 +60,21 @@ class Ship:
         flame_color = random.choice(["orange", "yellow", "red"]) if (self.vx or self.vy) else "gray"
         pygame.draw.circle(state.screen, flame_color, tail_world, max(2, int(size * 0.2)))
 
+        # Frost aura if frozen
+        if getattr(self, "freeze_ticks", 0) > 0:
+            aura_r = int(size * 1.2)
+            try:
+                pygame.draw.circle(state.screen, "cyan", (int(self.x), int(self.y)), aura_r, 1)
+            except Exception:
+                pass
+
     def move(self):
+        # If frozen, skip movement but still render
+        if getattr(self, "freeze_ticks", 0) > 0:
+            self.freeze_ticks = max(0, self.freeze_ticks - 1)
+            self.draw()
+            return
+
         new_x = self.x + self.vx
         new_y = self.y + self.vy
 
@@ -92,6 +106,8 @@ class Ship:
 
         if distance < 500:
             self.shoot_laser(target)
+        elif distance < 650:  # slightly longer than laser
+            self.shoot_freezing_ray(target)
         elif distance < 1000:
             self.shoot_machinegun(target)
         elif distance < 2000:
@@ -101,6 +117,12 @@ class Ship:
 
     def shoot_laser(self, target):
         pygame.draw.line(state.screen, "red", (self.x, self.y), (target.x, target.y), 2)
+
+    def shoot_freezing_ray(self, target):
+        # Draw a cyan beam and freeze the target briefly
+        pygame.draw.line(state.screen, "cyan", (self.x, self.y), (target.x, target.y), 3)
+        if hasattr(target, "freeze"):
+            target.freeze(200)  # ~2 seconds at 100 FPS
 
     def shoot_machinegun(self, target):
         distance_x = target.x - self.x
@@ -166,6 +188,12 @@ class Ship:
             bullet.radius = 3
             bullet.move()
             state.bullets.append(bullet)
+
+    def freeze(self, ticks):
+        # Apply or extend freeze duration
+        if not hasattr(self, "freeze_ticks"):
+            self.freeze_ticks = 0
+        self.freeze_ticks = max(self.freeze_ticks, int(ticks))
 
     def tick(self):
         if self == state.player:  # do nothing, controlled by the player (future)
