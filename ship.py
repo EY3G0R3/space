@@ -5,7 +5,7 @@ import pygame
 import state
 import utils
 from bullet import Bullet
-from effects import DeathFX
+from effects import DeathFX, ExhaustFX
 
 
 class Ship:
@@ -176,11 +176,13 @@ class Ship:
         distance_x = target.x - self.x
         distance_y = target.y - self.y
 
-        vx = distance_x / 500
-        vy = distance_y / 500
+        # Slower initial velocity for torpedo
+        vx = distance_x / 1500
+        vy = distance_y / 1500
 
-        ax = vx / 3
-        ay = vy / 3
+        # Gentle acceleration to feel weighty
+        ax = vx / 10
+        ay = vy / 10
 
         color = self.color
 
@@ -194,6 +196,7 @@ class Ship:
                 vy,
                 ax,
                 ay,
+                kind="torpedo",
             )
             bullet.radius = 4
             bullet.move()
@@ -203,6 +206,18 @@ class Ship:
         recoil_factor = 2.0  # tune for feel
         self.vx += -vx * recoil_factor
         self.vy += -vy * recoil_factor
+
+        # Exhaust burst at the tail, flowing opposite to shot
+        dir_x, dir_y = -vx, -vy
+        mag = math.hypot(dir_x, dir_y)
+        if mag != 0:
+            ux, uy = dir_x / mag, dir_y / mag
+        else:
+            ux, uy = -1.0, 0.0
+        tail_offset = self.radius * 0.6
+        tail_x = self.x + ux * tail_offset
+        tail_y = self.y + uy * tail_offset
+        state.effects.append(ExhaustFX(tail_x, tail_y, ux, uy, strength=1.0))
 
     def freeze(self, ticks):
         # Apply or extend freeze duration

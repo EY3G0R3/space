@@ -7,7 +7,7 @@ stars = []
 ships = []
 bullets = []
 deaths = []
+effects = []
 
 # Player reference (optional)
 player = None
-

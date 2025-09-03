@@ -66,6 +66,9 @@ def run():
         for death in list(state.deaths):
             death.tick()
 
+        for fx in list(state.effects):
+            fx.tick()
+
         # Add new stars
         if random.randint(0, 100) > 70:
             state.stars.append(Star())
