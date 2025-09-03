@@ -189,6 +189,11 @@ class Ship:
             bullet.move()
             state.bullets.append(bullet)
 
+        # Recoil: apply a small impulse opposite to shot direction
+        recoil_factor = 0.5  # tune for feel
+        self.vx += -vx * recoil_factor
+        self.vy += -vy * recoil_factor
+
     def freeze(self, ticks):
         # Apply or extend freeze duration
         if not hasattr(self, "freeze_ticks"):
