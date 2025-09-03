@@ -225,3 +225,57 @@ class ExhaustFX:
     def destroy(self):
         if self in state.effects:
             state.effects.remove(self)
+
+
+class TrailSmokeFX:
+    """Short-lived gray smoke puffs for trails.
+
+    Particles drift opposite to the provided direction with slight spread.
+    Keep it tiny and cheap since it emits frequently.
+    """
+
+    def __init__(self, x, y, dir_x=0.0, dir_y=0.0, strength=1.0):
+        self.particles = []
+        mag = math.hypot(dir_x, dir_y)
+        if mag == 0:
+            dir_x, dir_y = -1.0, 0.0
+        else:
+            dir_x, dir_y = dir_x / mag, dir_y / mag
+
+        count = random.randint(2, 4)
+        base_angle = math.atan2(dir_y, dir_x)
+        for _ in range(count):
+            jitter = random.uniform(-0.4, 0.4)
+            ang = base_angle + jitter
+            speed = random.uniform(0.6, 1.4) * (0.8 + 0.6 * strength)
+            vx = math.cos(ang) * speed
+            vy = math.sin(ang) * speed
+            life = random.randint(10, 18)
+            radius = random.uniform(1.0, 2.4)
+            self.particles.append([x, y, vx, vy, life, radius])
+
+    def draw(self):
+        for px, py, _, __, ___, r in self.particles:
+            pygame.draw.circle(
+                state.screen, (170, 170, 170), (int(px), int(py)), max(1, int(r))
+            )
+
+    def tick(self):
+        next_particles = []
+        for p in self.particles:
+            p[0] += p[2]
+            p[1] += p[3]
+            p[2] *= 0.98
+            p[3] *= 0.98
+            p[4] -= 1
+            p[5] = min(4.0, p[5] + 0.05)
+            if p[4] > 0:
+                next_particles.append(p)
+        self.particles = next_particles
+        self.draw()
+        if not self.particles:
+            self.destroy()
+
+    def destroy(self):
+        if self in state.effects:
+            state.effects.remove(self)

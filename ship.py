@@ -168,6 +168,7 @@ class Ship:
                 vy,
                 0,
                 0.1,
+                kind="glide_bomb",
             )
             bullet.radius = 5
             bullet.move()
