@@ -57,14 +57,22 @@ class Ship:
         # Engine glow at tail center
         tail_local = (-0.65 * size, 0)
         tail_world = transform(tail_local)
-        flame_color = random.choice(["orange", "yellow", "red"]) if (self.vx or self.vy) else "gray"
-        pygame.draw.circle(state.screen, flame_color, tail_world, max(2, int(size * 0.2)))
+        flame_color = (
+            random.choice(["orange", "yellow", "red"])
+            if (self.vx or self.vy)
+            else "gray"
+        )
+        pygame.draw.circle(
+            state.screen, flame_color, tail_world, max(2, int(size * 0.2))
+        )
 
         # Frost aura if frozen
         if getattr(self, "freeze_ticks", 0) > 0:
             aura_r = int(size * 1.2)
             try:
-                pygame.draw.circle(state.screen, "cyan", (int(self.x), int(self.y)), aura_r, 1)
+                pygame.draw.circle(
+                    state.screen, "cyan", (int(self.x), int(self.y)), aura_r, 1
+                )
             except Exception:
                 pass
 
@@ -120,7 +128,9 @@ class Ship:
 
     def shoot_freezing_ray(self, target):
         # Draw a cyan beam and freeze the target briefly
-        pygame.draw.line(state.screen, "cyan", (self.x, self.y), (target.x, target.y), 3)
+        pygame.draw.line(
+            state.screen, "cyan", (self.x, self.y), (target.x, target.y), 3
+        )
         if hasattr(target, "freeze"):
             target.freeze(200)  # ~2 seconds at 100 FPS
 
@@ -133,7 +143,7 @@ class Ship:
 
         color = self.color
 
-        for i in range(0, 5):
+        for i in range(0, 8):
             bullet = Bullet(self, color, self.x, self.y, vx, vy)
             bullet.move()
             state.bullets.append(bullet)
@@ -166,15 +176,15 @@ class Ship:
         distance_x = target.x - self.x
         distance_y = target.y - self.y
 
-        vx = distance_x / 1000
-        vy = distance_y / 1000
+        vx = distance_x / 500
+        vy = distance_y / 500
 
-        ax = vx / 5
-        ay = vy / 5
+        ax = vx / 3
+        ay = vy / 3
 
         color = self.color
 
-        for i in range(0, 1):
+        for i in range(0, 2):
             bullet = Bullet(
                 self,
                 color,
@@ -185,12 +195,12 @@ class Ship:
                 ax,
                 ay,
             )
-            bullet.radius = 3
+            bullet.radius = 4
             bullet.move()
             state.bullets.append(bullet)
 
         # Recoil: apply a small impulse opposite to shot direction
-        recoil_factor = 0.5  # tune for feel
+        recoil_factor = 2.0  # tune for feel
         self.vx += -vx * recoil_factor
         self.vy += -vy * recoil_factor
 
