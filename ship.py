@@ -93,7 +93,8 @@ class Ship:
         self.draw()
 
     def destroy(self):
-        state.deaths.append(DeathFX(self.x, self.y))
+        # Pass ship color to death FX to tint explosion
+        state.deaths.append(DeathFX(self.x, self.y, getattr(self, "color", None)))
         if self in state.ships:
             state.ships.remove(self)
         state.ships.append(Ship())

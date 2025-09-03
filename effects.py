@@ -6,20 +6,173 @@ import state
 
 
 class DeathFX:
-    def __init__(self, x, y):
-        self.radius = 5
-        self.color = random.choice(["yellow", "orange", "red"])
-        self.x = x
-        self.y = y
+    """A fancier composite death effect.
+
+    Components:
+    - Initial flash
+    - Shockwave ring
+    - Sparks (colored hot debris)
+    - Smoke puffs
+    """
+
+    def __init__(self, x, y, base_color=None):
+        self.x = float(x)
+        self.y = float(y)
+        # color palette derived from an optional ship color
+        base = base_color or random.choice(["yellow", "orange", "red"])
+        self.palette = self._palette_for(base)
+
+        # Flash
+        self.flash_time = 6
+        self.flash_radius = 10
+
+        # Shockwave
+        self.ring_r = 6
+        self.ring_dr = 6
+        self.ring_w = 2
+        self.ring_r_max = random.randint(120, 200)
+
+        # Sparks (hot bits)
+        self.sparks = []  # [x, y, vx, vy, life, r, color]
+        count = random.randint(28, 42)
+        for _ in range(count):
+            ang = random.uniform(0, 2 * math.pi)
+            speed = random.uniform(2.5, 6.0)
+            vx = math.cos(ang) * speed
+            vy = math.sin(ang) * speed
+            life = random.randint(18, 34)
+            r = random.uniform(1.0, 2.5)
+            color = random.choice(self.palette)
+            self.sparks.append([self.x, self.y, vx, vy, life, r, color])
+
+        # Smoke (cooling debris)
+        self.smoke = []  # [x, y, vx, vy, life, r]
+        smoke_count = random.randint(8, 14)
+        for _ in range(smoke_count):
+            ang = random.uniform(0, 2 * math.pi)
+            speed = random.uniform(0.4, 1.4)
+            vx = math.cos(ang) * speed
+            vy = math.sin(ang) * speed
+            life = random.randint(28, 48)
+            r = random.uniform(2.0, 4.0)
+            self.smoke.append([self.x, self.y, vx, vy, life, r])
+
+    def _palette_for(self, base):
+        by_name = {
+            "yellow": [(255, 255, 180), (255, 220, 100), (255, 200, 60)],
+            "orange": [(255, 200, 120), (255, 160, 60), (255, 120, 40)],
+            "red": [(255, 150, 120), (255, 100, 80), (255, 60, 60)],
+            "blue": [(180, 220, 255), (140, 200, 255), (100, 180, 255)],
+            "pink": [(255, 180, 220), (255, 150, 210), (255, 120, 200)],
+            "cyan": [(180, 255, 255), (140, 240, 255), (100, 220, 255)],
+        }
+        return by_name.get(base, by_name["orange"])
+
+    def _draw_flash(self):
+        if self.flash_time > 0:
+            try:
+                pygame.draw.circle(
+                    state.screen,
+                    (255, 255, 255),
+                    (int(self.x), int(self.y)),
+                    max(2, int(self.flash_radius)),
+                )
+            except Exception:
+                pass
+
+    def _draw_ring(self):
+        if self.ring_r < self.ring_r_max:
+            try:
+                pygame.draw.circle(
+                    state.screen,
+                    (255, 255, 255),
+                    (int(self.x), int(self.y)),
+                    int(self.ring_r),
+                    max(1, int(self.ring_w)),
+                )
+            except Exception:
+                pass
+
+    def _draw_sparks(self):
+        for px, py, _, __, ___, r, color in self.sparks:
+            try:
+                pygame.draw.circle(
+                    state.screen, color, (int(px), int(py)), max(1, int(r))
+                )
+            except Exception:
+                pass
+
+    def _draw_smoke(self):
+        for px, py, _, __, ___, r in self.smoke:
+            try:
+                pygame.draw.circle(
+                    state.screen, (150, 150, 150), (int(px), int(py)), max(1, int(r))
+                )
+            except Exception:
+                pass
 
     def draw(self):
-        pygame.draw.circle(state.screen, self.color, (self.x, self.y), self.radius)
+        self._draw_flash()
+        self._draw_ring()
+        self._draw_sparks()
+        self._draw_smoke()
 
     def tick(self):
-        self.radius += 5
+        # Update shockwave
+        if self.ring_r < self.ring_r_max:
+            self.ring_r += self.ring_dr
+            self.ring_w = max(1, self.ring_w - 0.05)
+
+        # Update flash
+        if self.flash_time > 0:
+            self.flash_time -= 1
+            self.flash_radius *= 1.2
+
+        # Update sparks
+        next_sparks = []
+        for p in self.sparks:
+            p[0] += p[2]
+            p[1] += p[3]
+            # slight drag
+            p[2] *= 0.98
+            p[3] *= 0.98
+            # subtle outward push to maintain burst feel
+            dx = p[0] - self.x
+            dy = p[1] - self.y
+            dist = math.hypot(dx, dy) + 1e-5
+            p[2] += (dx / dist) * 0.02
+            p[3] += (dy / dist) * 0.02
+            p[4] -= 1
+            p[5] = max(0.5, p[5] - 0.04)
+            if p[4] > 0 and p[5] > 0.5:
+                next_sparks.append(p)
+        self.sparks = next_sparks
+
+        # Update smoke
+        next_smoke = []
+        for p in self.smoke:
+            p[0] += p[2]
+            p[1] += p[3]
+            # gentle drift outward and slight upward float
+            p[3] -= 0.01
+            p[2] *= 0.99
+            p[3] *= 0.99
+            p[4] -= 1
+            p[5] = min(12.0, p[5] + 0.08)
+            if p[4] > 0:
+                next_smoke.append(p)
+        self.smoke = next_smoke
+
+        # Render
         self.draw()
 
-        if self.radius > random.randint(100, 200):
+        # End condition
+        if (
+            self.flash_time <= 0
+            and self.ring_r >= self.ring_r_max
+            and not self.sparks
+            and not self.smoke
+        ):
             self.destroy()
 
     def destroy(self):
